@@ -1,0 +1,31 @@
+import os
+import pandas as pd
+from glob import glob
+import numpy as np
+
+csv_list = glob('/python/meiyongde/anode/*')  # 查看同文件夹下的csv文件数
+first_line = np.array(('2016/12/01', '2016/12/02', '2016/12/03', '2016/12/04',
+                       '2016/12/05', '2016/12/06', '2016/12/07', '2016/12/08',
+                       '2016/12/09', '2016/12/10', '2016/12/11', '2016/12/12',
+                       '2016/12/13', '2016/12/14', '2016/12/15', '2016/12/16',
+                       '2016/12/17', '2016/12/18', '2016/12/19', '2016/12/20',
+                       '2016/12/21', '2016/12/22', '2016/12/23', '2016/12/24'))
+first_row = []
+for m in range(1, 102):
+    name = 'column'+str(m)
+    first_row.append(name)
+first_row = np.array(first_row)
+print(first_row)
+for i in csv_list:
+    file_name = os.path.basename(i)
+    data_read = pd.read_csv(i, header=None)
+    data = np.array(data_read).T
+    data = np.column_stack((first_line, data))
+    data = np.row_stack((first_row, data))
+    with open('C:/Users/76082/PycharmProjects/bigdata/datas/'+file_name, 'a') as f:
+        for j in range(data.shape[0]):
+            for k in range(data.shape[1]):
+                f.write(data[j][k])
+                if k != data.shape[1]-1:
+                    f.write(',')
+            f.write('\n')
